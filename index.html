@@ -1,0 +1,66 @@
+<script src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js'></script>
+<script>
+document.body.style.overflow = 'hidden'
+document.body.style.margin = '0px'
+document.body.style.padding = '0px'
+document.body.style.border = 'none'
+
+var innerWidth = parseFloat(getComputedStyle(document.body).width)
+document.body.innerText = ""
+var n = 100
+var albumEls = _.times(n, function(i){
+  var div = document.createElement('div')
+  div.style.position = 'absolute'
+  div.style.top = '0px'
+  div.style.left = '0px'
+  return div
+})
+ 
+albumEls.forEach(document.body.appendChild,document.body)
+ 
+position = function(){
+  var columns = _.random(5,15)
+  albumEls.forEach(function(el,i){
+ 
+ 
+    var width = innerWidth / columns
+    var x = (i % columns) * width;  
+    var y = Math.floor(i/columns) * width
+ 
+    el.style.width = el.style.height = width + 'px'
+    el.style.transform = "translate("+x+"px,"+y+"px)"
+    el.style.transition = "1s ease-in-out"
+  })
+}
+ 
+position()
+ 
+lighten = function(amount, el){
+  el.style.backgroundColor = 'rgb(' + (el.style.backgroundColor.match(/\d+/g) || [0,0,0]).map(Number).map(function(number){
+    return Math.max(Math.min(number+amount,255),0)
+  }).join(',') + ')'
+ 
+}
+ 
+randomColor = function(){
+ 
+   return 'rgb(' + _.times(3,Math.random).map(function(ratio){
+    return ratio * 255
+  }).map(Math.floor).join(',') + ')'
+ 
+}
+ 
+var lastElement = null;
+window.onmousemove = function(e){
+  if(lastElement != e.srcElement){
+    lighten(10,e.srcElement)
+  }
+}
+ 
+setInterval(function(){
+  var el = _.sample(albumEls)
+  el.style.backgroundColor = 'rgb('+_.random(0,50)+','+_.random(0,50)+','+_.random(100,255)+')'
+},0)
+ 
+setInterval(position,5000)
+</script>
